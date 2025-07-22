@@ -3,6 +3,7 @@ from time import sleep
 from pydantic import BaseModel
 
 from figo.etl.extraction.webscraper import Scraper
+from figo.etl.loading.database import Database
 from figo.logger.config import logger as log
 from figo.settings.config import Settings
 
@@ -14,11 +15,12 @@ class Player(BaseModel):
 
 
 class PlayerList:
-    def __init__(self, settings: Settings) -> None:
-        self.scraper: Scraper = Scraper()
+    def __init__(self, database: Database, scraper: Scraper, settings: Settings) -> None:
+        self.database: Database = database
+        self.scraper: Scraper = scraper
         self.settings: Settings = settings
 
-    def get_player(self) -> list[Player]:
+    def get_players(self) -> list[Player]:
         landing_page_html = self.scraper.request_blocking(self.settings.players_url)
 
         landing_page_elements = self.scraper.parse(
@@ -29,7 +31,7 @@ class PlayerList:
             self.scraper.extract_links(element) for element in landing_page_elements
         ]
 
-        players_list = []
+        players_list: list[Player] = []
         for link in landing_page_links:
             url_players_page = self.settings.base_url + link
 

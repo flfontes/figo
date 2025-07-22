@@ -46,7 +46,7 @@ class Scraper:
 
         return css_elements
 
-    def extract_links(self, a_node: Node) -> None | str:
+    def extract_links(self, a_node: Node) -> str:
         link = a_node.attributes['href']
 
         if not link:
