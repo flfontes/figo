@@ -1,0 +1,10 @@
+session_name: figo-dev
+windows:
+  - windows_name: dev
+    layout: even-horizontal
+    shell_command_before:
+      - pydev figo
+    panes:
+      - shell_command:
+          - nvim
+      - clear
